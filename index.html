@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketPilot AI — Bright Minds Tutoring</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12192E; --ink-2:#202B4C; --ink-3:#2C3A63;
+    --paper:#FBF7EC; --paper-line:#E6DCC2; --paper-margin:#D9A9A0;
+    --chalk:#F0BD4A; --chalk-ink:#5C4306;
+    --sage:#4F7A55; --sage-light:#E1EBDE; --sage-ink:#264029;
+    --coral:#C1502E; --coral-light:#F6DFD3; --coral-ink:#5C2413;
+    --text:#1E2230; --slate:#666B78; --line:#DCD4BE;
+    --font-display:'Fraunces',serif; --font-body:'Inter',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ink);font-family:var(--font-body);color:var(--text);}
+  .app{display:flex;min-height:100vh;}
+
+  .sidebar{width:230px;flex-shrink:0;background:var(--ink);color:#EFE9D8;padding:28px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--chalk);display:flex;align-items:center;justify-content:center;color:var(--chalk-ink);font-family:var(--font-display);font-weight:700;font-size:18px;}
+  .brand-name{font-family:var(--font-display);font-weight:600;font-size:17px;}
+  .brand-sub{font-size:11px;color:#9CA3C4;margin:0 0 30px 44px;letter-spacing:.02em;}
+
+  .nav{display:flex;flex-direction:column;gap:2px;margin-bottom:auto;}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:8px;color:#C7CCE3;font-size:14px;cursor:pointer;border:none;background:transparent;font-family:var(--font-body);text-align:left;width:100%;}
+  .nav-item i{font-size:18px;width:18px;}
+  .nav-item:hover{background:var(--ink-2);color:#fff;}
+  .nav-item.active{background:var(--ink-3);color:#fff;box-shadow:inset 3px 0 0 var(--chalk);}
+
+  .sidebar-foot{border-top:1px solid var(--ink-3);padding-top:16px;margin-top:16px;}
+  .biz-card{background:var(--ink-2);border-radius:10px;padding:12px;}
+  .biz-name{font-size:13px;font-weight:600;margin:0 0 2px;}
+  .biz-tag{font-size:11px;color:#9CA3C4;margin:0;}
+  .zb-badge{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:rgba(240,189,74,0.15);color:var(--chalk);font-size:11px;font-family:var(--font-mono);padding:4px 8px;border-radius:5px;}
+
+  .main{flex:1;background:
+      repeating-linear-gradient(var(--paper) 0px, var(--paper) 31px, var(--paper-line) 32px),
+      linear-gradient(90deg, var(--paper) 0 64px, var(--paper-margin) 64px, var(--paper-margin) 65px, var(--paper) 65px);
+    min-height:100vh; padding:36px 48px 60px 76px;}
+
+  .topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage-ink);background:var(--sage-light);padding:5px 10px;border-radius:5px;}
+  .view-title{font-family:var(--font-display);font-size:32px;font-weight:600;margin:8px 0 4px;}
+  .view-sub{color:var(--slate);font-size:14.5px;margin:0;max-width:560px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;}
+  .grid{display:grid;gap:16px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:1.3fr 1fr;}
+
+  .metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .metric-label{font-size:12px;color:var(--slate);text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-mono);margin:0 0 8px;}
+  .metric-val{font-family:var(--font-display);font-size:28px;font-weight:600;margin:0;}
+  .metric-delta{font-size:12.5px;color:var(--sage-ink);margin:4px 0 0;}
+
+  .section-gap{margin-top:26px;}
+  h3.block-title{font-family:var(--font-display);font-size:19px;font-weight:600;margin:0 0 14px;}
+
+  .chart-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 22px 16px;}
+  .chart-legend{display:flex;gap:18px;margin-bottom:10px;font-size:12.5px;color:var(--slate);}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;}
+
+  .btn{font-family:var(--font-body);font-size:13.5px;font-weight:600;border-radius:7px;padding:9px 15px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .btn:hover{background:var(--ink-2);}
+  .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .btn-sm{padding:6px 11px;font-size:12.5px;}
+  .btn-chalk{background:var(--chalk);border-color:var(--chalk);color:var(--chalk-ink);}
+  .btn-chalk:hover{filter:brightness(0.96);}
+
+  .rail{display:flex;align-items:center;gap:0;margin-bottom:24px;}
+  .rail-step{display:flex;align-items:center;gap:8px;}
+  .rail-num{width:26px;height:26px;border-radius:50%;background:var(--paper-line);color:var(--slate);font-family:var(--font-mono);font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .rail-step.done .rail-num{background:var(--sage);color:#fff;}
+  .rail-step.current .rail-num{background:var(--chalk);color:var(--chalk-ink);}
+  .rail-label{font-size:13px;color:var(--slate);}
+  .rail-step.current .rail-label{color:var(--text);font-weight:600;}
+  .rail-line{width:46px;height:1px;background:var(--paper-line);margin:0 10px;}
+
+  .campaign-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;}
+  .cc-row{display:grid;grid-template-columns:140px 1fr;gap:6px 16px;padding:10px 0;border-bottom:1px solid var(--paper-line);font-size:14px;}
+  .cc-row:last-child{border-bottom:none;}
+  .cc-label{font-family:var(--font-mono);font-size:11.5px;color:var(--slate);text-transform:uppercase;letter-spacing:.03em;padding-top:2px;}
+  .tag{display:inline-block;background:var(--sage-light);color:var(--sage-ink);font-size:12px;padding:3px 9px;border-radius:5px;margin:2px 6px 2px 0;}
+
+  .persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+  .persona-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .persona-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .persona-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:14px;}
+  .persona-name{font-weight:600;font-size:14px;margin:0;}
+  .persona-mood{font-size:11.5px;color:var(--slate);margin:0;}
+  .persona-quote{font-size:13.5px;color:var(--text);font-style:italic;line-height:1.5;margin:0;}
+
+  .sw-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;}
+  .sw-card{border-radius:12px;padding:16px 18px;}
+  .sw-card.strength{background:var(--sage-light);}
+  .sw-card.weak{background:var(--coral-light);}
+  .sw-title{font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px;}
+  .sw-card.strength .sw-title{color:var(--sage-ink);}
+  .sw-card.weak .sw-title{color:var(--coral-ink);}
+  .sw-card ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.65;}
+
+  .queue{display:flex;flex-direction:column;gap:12px;}
+  .qcard{background:#fff;border:1px solid var(--line);border-left:4px solid var(--paper-line);border-radius:10px;padding:16px 18px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;}
+  .qcard.approved{border-left-color:var(--sage);}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .qtype{font-family:var(--font-mono);font-size:11px;color:var(--slate);text-transform:uppercase;}
+  .qtitle{font-weight:600;font-size:14.5px;margin:0;}
+  .qbody{font-size:13.5px;color:var(--text);line-height:1.55;max-width:480px;margin:0;}
+  .qstatus{font-size:11.5px;padding:3px 9px;border-radius:5px;background:var(--sage-light);color:var(--sage-ink);font-family:var(--font-mono);display:none;}
+  .qcard.approved .qstatus{display:inline-block;}
+  .qactions{display:flex;gap:8px;flex-shrink:0;}
+
+  table.roster{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.roster th{text-align:left;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--slate);padding:8px 10px;border-bottom:1px solid var(--line);}
+  table.roster td{padding:10px;border-bottom:1px solid var(--paper-line);}
+  table.roster tr:last-child td{border-bottom:none;}
+
+  .task-row{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid var(--paper-line);}
+  .task-row:last-child{border-bottom:none;}
+  .task-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;color:transparent;}
+  .task-check.done{background:var(--sage);border-color:var(--sage);color:#fff;}
+  .task-text{flex:1;font-size:14.5px;}
+  .task-text.done{color:var(--slate);text-decoration:line-through;}
+  .task-time{font-family:var(--font-mono);font-size:12px;color:var(--slate);}
+
+  .alert{display:flex;gap:12px;align-items:flex-start;background:var(--coral-light);border-radius:10px;padding:14px 16px;margin-bottom:22px;}
+  .alert i{color:var(--coral-ink);font-size:19px;margin-top:1px;}
+  .alert-title{font-weight:600;font-size:14px;margin:0 0 3px;color:var(--coral-ink);}
+  .alert-body{font-size:13.5px;margin:0;color:var(--text);}
+
+  @media (max-width:900px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;}
+    .main{padding:24px;}
+    .grid-3,.persona-grid,.sw-grid,.grid-2{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div class="brand-name">MarketPilot AI</div>
+    </div>
+    <p class="brand-sub">for education businesses</p>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="home"><i class="ti ti-home"></i> Home</button>
+      <button class="nav-item" data-view="campaign"><i class="ti ti-target-arrow"></i> Campaign</button>
+      <button class="nav-item" data-view="create"><i class="ti ti-pencil"></i> Create</button>
+      <button class="nav-item" data-view="audience"><i class="ti ti-users"></i> Audience</button>
+      <button class="nav-item" data-view="agent"><i class="ti ti-checklist"></i> Agent</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="biz-card">
+        <p class="biz-name">Bright Minds Tutoring</p>
+        <p class="biz-tag">Math and reading, grades 3-8</p>
+        <span class="zb-badge"><i class="ti ti-bolt"></i> Zero-budget mode</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section class="view active" id="view-home">
+      <div class="topline">
+        <div>
+          <span class="eyebrow">Fall enrollment campaign · day 9 of 14</span>
+          <h1 class="view-title">Outmatch the big platforms without outspending them.</h1>
+          <p class="view-sub">Bright Minds is a one-person tutoring business competing for the same parents that Kumon and Varsity Tutors chase with paid ads. Here's what a zero-budget campaign is doing instead.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="metric">
+          <p class="metric-label">Subscribers this campaign</p>
+          <p class="metric-val">31</p>
+          <p class="metric-delta">+6 in the last 7 days</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Daily plan streak</p>
+          <p class="metric-val">9 days</p>
+          <p class="metric-delta">3 of 3 tasks done today</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Ad spend to date</p>
+          <p class="metric-val">$0</p>
+          <p class="metric-delta">100% organic reach</p>
+        </div>
+      </div>
+
+      <div class="section-gap">
+        <h3 class="block-title">Reach: Bright Minds vs. big paid platforms</h3>
+        <div class="chart-wrap">
+          <div class="chart-legend">
+            <span><span class="dot" style="background:var(--sage)"></span>Bright Minds (organic)</span>
+            <span><span class="dot" style="background:#B9BDC9"></span>Regional tutoring franchise (paid ads)</span>
+          </div>
+          <svg viewBox="0 0 640 200" width="100%" style="display:block;">
+            <line x1="0" y1="170" x2="640" y2="170" stroke="#E6DCC2" stroke-width="1"/>
+            <polyline points="0,150 106,148 212,120 318,110 424,80 530,55 636,30" fill="none" stroke="#4F7A55" stroke-width="3" stroke-linecap="round"/>
+            <polyline points="0,140 106,136 212,132 318,128 424,126 530,124 636,122" fill="none" stroke="#B9BDC9" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+            <circle cx="636" cy="30" r="5" fill="#4F7A55"/>
+            <circle cx="636" cy="122" r="5" fill="#B9BDC9"/>
+            <text x="600" y="20" font-family="IBM Plex Mono" font-size="11" fill="#264029">+312%</text>
+            <text x="590" y="140" font-family="IBM Plex Mono" font-size="11" fill="#666B78">flat</text>
+            <text x="0" y="192" font-family="Inter" font-size="11" fill="#666B78">Week 1</text>
+            <text x="592" y="192" font-family="Inter" font-size="11" fill="#666B78">Week 2</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-campaign">
+      <div class="topline">
+        <div>
+          <span class="eyebrow">Campaign</span>
+          <h1 class="view-title">Your recommended campaign</h1>
+          <p class="view-sub">One plan, built from your onboarding answers — not a menu to sort through.</p>
+        </div>
+      </div>
+
+      <div class="rail">
+        <div class="rail-step done"><div class="rail-num"><i class="ti ti-check" style="font-size:14px;"></i></div><span class="rail-label">Recommend</span></div>
+        <div class="rail-line"></div>
+        <div class="rail-step current" id="rail-test"><div class="rail-num">2</div><span class="rail-label">Test</span></div>
+        <div class="rail-line"></div>
+        <div class="rail-step" id="rail-approve"><div class="rail-num">3</div><span class="rail-label">Approve</span></div>
+      </div>
+
+      <div class="campaign-card">
+        <div class="cc-row"><div class="cc-label">Goal</div><div>25 sign-ups for fall math and reading enrollment</div></div>
+        <div class="cc-row"><div class="cc-label">Audience</div><div>Parents of 3rd-8th graders nearby who worry their kid is falling behind in math</div></div>
+        <div class="cc-row"><div class="cc-label">Channels</div><div>
+          <span class="tag">Neighborhood Facebook groups</span>
+          <span class="tag">PTA newsletter</span>
+          <span class="tag">Referral flyers</span>
+          <span class="tag">Nextdoor</span>
+          <span class="tag">Library partnership</span>
+        </div></div>
+        <div class="cc-row"><div class="cc-label">Timeline</div><div>14 days, 3 tasks a day</div></div>
+        <div class="cc-row"><div class="cc-label">Success</div><div>25 subscribers to the fall enrollment list</div></div>
+      </div>
+
+      <div class="section-gap" style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 class="block-title" style="margin:0;">CampaignTwin test results</h3>
+        <button class="btn btn-ghost btn-sm" id="rerun-test"><i class="ti ti-refresh"></i> Improve my campaign</button>
+      </div>
+
+      <div class="persona-grid">
+        <div class="persona-card">
+          <div class="persona-head">
+            <div class="persona-avatar" style="background:var(--sage-light);color:var(--sage-ink);">IP</div>
+            <div><p class="persona-name">Interested parent</p><p class="persona-mood">Reads the whole post</p></div>
+          </div>
+          <p class="persona-quote">"A local tutor, not a franchise — I like that. I'd want to know the price before I message though."</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-head">
+            <div class="persona-avatar" style="background:var(--coral-light);color:var(--coral-ink);">SP</div>
+            <div><p class="persona-name">Skeptical parent</p><p class="persona-mood">Worried about cost and results</p></div>
+          </div>
+          <p class="persona-quote">"How is this different from the $40/session place down the street? I need proof this actually works."</p>
+        </div>
+        <div class="persona-card">
+          <div class="persona-head">
+            <div class="persona-avatar" style="background:#EFEAF6;color:#4B3E7A;">BP</div>
+            <div><p class="persona-name">Busy parent</p><p class="persona-mood">Skims in 5 seconds</p></div>
+          </div>
+          <p class="persona-quote">"Too much text. If I can't tell what to do in one glance, I'm scrolling past."</p>
+        </div>
+      </div>
+
+      <div class="sw-grid">
+        <div class="sw-card strength">
+          <p class="sw-title">Strengths</p>
+          <ul>
+            <li>"Local, not a franchise" builds trust fast</li>
+            <li>Grade range is specific enough to feel relevant</li>
+          </ul>
+        </div>
+        <div class="sw-card weak">
+          <p class="sw-title">Needs work</p>
+          <ul>
+            <li>No price mentioned — skeptical parents want it upfront</li>
+            <li>Post is too long for a quick scroll — trim to one line + a link</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-create">
+      <div class="topline">
+        <div>
+          <span class="eyebrow">Create</span>
+          <h1 class="view-title">Approval queue</h1>
+          <p class="view-sub">Only the content this campaign needs — approve, edit, or regenerate each item.</p>
+        </div>
+      </div>
+
+      <div class="queue" id="queue">
+        <div class="qcard">
+          <div>
+            <div class="qhead"><span class="qtype">Facebook group post</span><span class="qstatus">Approved</span></div>
+            <p class="qtitle">Neighborhood parenting group</p>
+            <p class="qbody">Local math &amp; reading tutor, grades 3-8. First session free — link in comments if your kid could use a confidence boost this fall.</p>
+          </div>
+          <div class="qactions">
+            <button class="btn btn-ghost btn-sm approve-btn"><i class="ti ti-check"></i> Approve</button>
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-refresh"></i></button>
+          </div>
+        </div>
+        <div class="qcard">
+          <div>
+            <div class="qhead"><span class="qtype">Referral flyer</span><span class="qstatus">Approved</span></div>
+            <p class="qtitle">School pickup handout</p>
+            <p class="qbody">"Bring a friend, both get a free session." One-page flyer with QR code to the sign-up form.</p>
+          </div>
+          <div class="qactions">
+            <button class="btn btn-ghost btn-sm approve-btn"><i class="ti ti-check"></i> Approve</button>
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-refresh"></i></button>
+          </div>
+        </div>
+        <div class="qcard">
+          <div>
+            <div class="qhead"><span class="qtype">PTA newsletter blurb</span><span class="qstatus">Approved</span></div>
+            <p class="qtitle">Three-sentence submission</p>
+            <p class="qbody">Short, plain-language blurb sized for the newsletter's community-notices section.</p>
+          </div>
+          <div class="qactions">
+            <button class="btn btn-ghost btn-sm approve-btn"><i class="ti ti-check"></i> Approve</button>
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-refresh"></i></button>
+          </div>
+        </div>
+        <div class="qcard">
+          <div>
+            <div class="qhead"><span class="qtype">Landing page</span><span class="qstatus">Approved</span></div>
+            <p class="qtitle">Fall enrollment page</p>
+            <p class="qbody">One screen: what you offer, who it's for, and the sign-up form. No pricing table, no clutter.</p>
+          </div>
+          <div class="qactions">
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-eye"></i> Preview</button>
+            <button class="btn btn-ghost btn-sm approve-btn"><i class="ti ti-check"></i> Approve</button>
+          </div>
+        </div>
+        <div class="qcard">
+          <div>
+            <div class="qhead"><span class="qtype">Sign-up form</span><span class="qstatus">Approved</span></div>
+            <p class="qtitle">Name, grade, email</p>
+            <p class="qbody">Three fields only — every extra field loses a busy parent.</p>
+          </div>
+          <div class="qactions">
+            <button class="btn btn-ghost btn-sm"><i class="ti ti-eye"></i> Preview</button>
+            <button class="btn btn-ghost btn-sm approve-btn"><i class="ti ti-check"></i> Approve</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-audience">
+      <div class="topline">
+        <div>
+          <span class="eyebrow">Audience</span>
+          <h1 class="view-title">Who's signing up</h1>
+          <p class="view-sub">Proof the campaign is working, without needing a CRM to read it.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h3 class="block-title" style="font-size:16px;">Recent subscribers</h3>
+          <table class="roster">
+            <tr><th>Parent</th><th>Grade</th><th>Source</th><th>Signed up</th></tr>
+            <tr><td>D. Alvarez</td><td>5th</td><td>Facebook group</td><td>Jul 24</td></tr>
+            <tr><td>M. Okafor</td><td>3rd</td><td>Referral flyer</td><td>Jul 23</td></tr>
+            <tr><td>R. Chen</td><td>7th</td><td>PTA newsletter</td><td>Jul 22</td></tr>
+            <tr><td>T. Boone</td><td>4th</td><td>Nextdoor</td><td>Jul 21</td></tr>
+            <tr><td>S. Kapoor</td><td>6th</td><td>Facebook group</td><td>Jul 20</td></tr>
+            <tr><td>L. Ferreira</td><td>8th</td><td>Referral flyer</td><td>Jul 19</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h3 class="block-title" style="font-size:16px;">Signups by channel</h3>
+          <svg viewBox="0 0 260 190" width="100%">
+            <text x="0" y="14" font-family="Inter" font-size="11" fill="#666B78">Facebook group</text>
+            <rect x="0" y="20" width="180" height="16" rx="3" fill="#4F7A55"/>
+            <text x="188" y="32" font-family="IBM Plex Mono" font-size="11" fill="#264029">12</text>
+            <text x="0" y="58" font-family="Inter" font-size="11" fill="#666B78">Referral flyer</text>
+            <rect x="0" y="64" width="130" height="16" rx="3" fill="#4F7A55"/>
+            <text x="138" y="76" font-family="IBM Plex Mono" font-size="11" fill="#264029">9</text>
+            <text x="0" y="102" font-family="Inter" font-size="11" fill="#666B78">PTA newsletter</text>
+            <rect x="0" y="108" width="80" height="16" rx="3" fill="#4F7A55"/>
+            <text x="88" y="120" font-family="IBM Plex Mono" font-size="11" fill="#264029">6</text>
+            <text x="0" y="146" font-family="Inter" font-size="11" fill="#666B78">Nextdoor</text>
+            <rect x="0" y="152" width="50" height="16" rx="3" fill="#4F7A55"/>
+            <text x="58" y="164" font-family="IBM Plex Mono" font-size="11" fill="#264029">4</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-agent">
+      <div class="topline">
+        <div>
+          <span class="eyebrow">Agent</span>
+          <h1 class="view-title">Today's marketing plan</h1>
+          <p class="view-sub">Three things, with time estimates. Nothing else to interpret.</p>
+        </div>
+      </div>
+
+      <div class="alert">
+        <i class="ti ti-alert-triangle"></i>
+        <div>
+          <p class="alert-title">Traffic is up, signups are flat</p>
+          <p class="alert-body">Your landing page is getting more visits this week, but fewer people are finishing the form. Today's plan adds a task to shorten it.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="task-row">
+          <div class="task-check done" data-task><i class="ti ti-check"></i></div>
+          <div class="task-text done">Post in 2 neighborhood Facebook groups</div>
+          <div class="task-time">10 min</div>
+        </div>
+        <div class="task-row">
+          <div class="task-check done" data-task><i class="ti ti-check"></i></div>
+          <div class="task-text done">Drop flyers at school pickup</div>
+          <div class="task-time">15 min</div>
+        </div>
+        <div class="task-row">
+          <div class="task-check" data-task></div>
+          <div class="task-text">Shorten the sign-up form to 3 fields</div>
+          <div class="task-time">8 min</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('.nav-item').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.nav-item').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.approve-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var card = btn.closest('.qcard');
+      card.classList.toggle('approved');
+    });
+  });
+
+  document.querySelectorAll('[data-task]').forEach(function(box){
+    box.addEventListener('click', function(){
+      box.classList.toggle('done');
+      box.innerHTML = box.classList.contains('done') ? '<i class="ti ti-check"></i>' : '';
+      box.nextElementSibling.classList.toggle('done');
+    });
+  });
+
+  document.getElementById('rerun-test').addEventListener('click', function(){
+    document.getElementById('rail-approve').classList.add('current');
+    document.getElementById('rail-test').classList.remove('current');
+    document.getElementById('rail-test').classList.add('done');
+    document.getElementById('rail-test').querySelector('.rail-num').innerHTML = '<i class="ti ti-check" style="font-size:14px;"></i>';
+  });
+</script>
+</body>
+</html>
